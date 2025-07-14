@@ -4,15 +4,18 @@ import android.widget.EditText
 import android.os.Bundle
 import android.widget.Button
 import android.widget.Toast
+import android.widget.*
 import androidx.activity.compose.setContent
 import androidx.annotation.OptIn
-import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.*
 import androidx.media3.common.util.Log
 import io.realm.kotlin.Realm
 import io.realm.kotlin.RealmConfiguration
 import androidx.core.view.*
 import androidx.media3.common.util.UnstableApi
 import android.util.*
+import android.content.*
+
 
 class MainActivity : AppCompatActivity() {
     private lateinit var realm: Realm
@@ -27,54 +30,54 @@ class MainActivity : AppCompatActivity() {
             schema = setOf(Usuario::class)
         )
 
-            .schemaVersion(1)
+            .schemaVersion(2)
+            /*.migration{migration, olVersion, newVersion ->
+                if(olversion == 1L){
+                    val schema = migration.schema
+                    schema["Usuario"]?.addField("ejemplo", String::class.java)
+                }
+            }*/
             .build()
 
         realm = Realm.open(config)
 /////////////////////////////////////////////////////////////////////////////////////////////
-
-        val intNombre = findViewById<EditText>(R.id.intNombre)
-        val intEdad = findViewById<EditText>(R.id.intEdad)
-        val btnIns = findViewById<Button>(R.id.btnIns)
-
-
-        /////////////////////////////////////////////////////////////////////////////////////////////
-        //Funciones
-        fun insertar(realm: Realm, id: Int, nombre: String, edad: Int) {
-            realm.writeBlocking {
-                copyToRealm(Usuario().apply {
-                    this.id = id;
-                    this.edad = edad;
-                    this.nombre = nombre;
-                })
-            }
+        //////////====== Usuario =======///////////
+        val btnUs = findViewById<Button>(R.id.btnUs)
+        btnUs.setOnClickListener{
+            val intent = Intent(this, UsuarioActivity::class.java)
+            startActivity(intent)
+        }
+        //////////====== Viaje =======///////////
+        val btnV = findViewById<Button>(R.id.btnVi)
+        btnV.setOnClickListener{
+            val intent = Intent(this, ViajeActivity::class.java)
+            startActivity(intent)
+        }
+        //////////====== puesto =======///////////
+        val btnP = findViewById<Button>(R.id.btnPu)
+        btnP.setOnClickListener{
+            val intent = Intent(this, PuestoActivity::class.java)
+            startActivity(intent)
+        }
+        //////////====== Habitacion =======///////////
+        val btnH = findViewById<Button>(R.id.btnHa)
+        btnH.setOnClickListener{
+            val intent = Intent(this, HabitacionActivity::class.java)
+            startActivity(intent)
+        }
+        //////////====== Maleta=======///////////
+        val btnM = findViewById<Button>(R.id.btnMa)
+        btnM.setOnClickListener{
+            val intent = Intent(this, MaletaActivity::class.java)
+            startActivity(intent)
+        }
+        //////////====== Pago =======///////////
+        val btnF = findViewById<Button>(R.id.btnPa)
+        btnF.setOnClickListener{
+            val intent = Intent(this, PagoActivity::class.java)
+            startActivity(intent)
         }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////
-        //funciones2
-        if (btnIns == null) {
-            Log.e("ERROR", "Btn2 no fue encontrado, revisa el ID en activity_main.xml")
-        } else {
-            btnIns.setOnClickListener {
-                val nombre = intNombre.text.toString()
-                val edad = intEdad.text.toString()
 
-                if (nombre.isNotEmpty() && edad.isNotEmpty()) {
-                    val id = (1000..9999).random()
-                    insertar(realm, id, nombre, edad.toInt())
-
-                    Toast.makeText(this, "Usuario guardado", Toast.LENGTH_SHORT).show()
-                } else {
-                    Toast.makeText(this, "Usuario no registrado", Toast.LENGTH_SHORT).show()
-                }
-
-            }
-            val usuarios = realm.query(Usuario::class).find()
-            for (u in usuarios) {
-                Log.d("REALM", "ID: ${u.id}, Nombre: ${u.nombre}, Edad: ${u.edad}")
-
-
-            }
-        }
     }
 }

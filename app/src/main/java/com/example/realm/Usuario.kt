@@ -5,8 +5,13 @@ import io.realm.kotlin.types.RealmObject
 
 class Usuario: RealmObject{
     @PrimaryKey
-    var id: Int = 0
-
+    var id: String = ""
     var nombre: String = ""
-    var edad: Int = 0
+    var edad: String = ""
+    var typo: String = ""
+    var viajeId: String = ""
+
+    override fun toString(): String{
+        return "(${id} ${nombre}"
+    }
 }
