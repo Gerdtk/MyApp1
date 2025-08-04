@@ -27,7 +27,7 @@ class MainActivity : AppCompatActivity() {
         Log.d("REALM", "mensaje de prueba")
 
         val config = RealmConfiguration.Builder(
-            schema = setOf(Usuario::class)
+            schema = setOf(Usuario::class, Habitacion::class)
         )
 
             .schemaVersion(2)

@@ -5,7 +5,7 @@ import io.realm.kotlin.types.RealmObject
 
 class Puesto: RealmObject {
     @PrimaryKey
-    var idp: Int = 0
+    var idp: String = ""
 
     var asiento: String = ""
     var transpote: String = ""

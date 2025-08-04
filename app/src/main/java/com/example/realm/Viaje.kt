@@ -6,7 +6,7 @@ import io.realm.kotlin.types.RealmObject
 class Viaje: RealmObject{
 
     @PrimaryKey
-    var idv: Int = 0
+    var idv: String = ""
 
     var typo: String = ""
     var fechaIn: String = ""

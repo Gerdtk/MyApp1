@@ -240,12 +240,17 @@ class UsuarioActivity : AppCompatActivity() {
         }
 
         btnEli.setOnClickListener {
+            val nombre = Nombrem.text.toString()
             val spinnerEli = findViewById<Spinner>(R.id.spinEliminar)
             val adapterEli = ArrayAdapter(this, android.R.layout.simple_spinner_item, listaUs)
             adapterEli.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            spinnerMod.adapter = adapterEli
+            spinnerEli.adapter = adapterEli
             val usuarioSelec = spinnerMod.selectedItem as Usuario
             val idSelec = usuarioSelec.id
+            if (nombre.isBlank()) {
+                Toast.makeText(this, "Nombre y edad son requeridos", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
 
             crud.eliminar(idSelec)
             Toast.makeText(this, "Usuario Eliminado", Toast.LENGTH_SHORT).show()

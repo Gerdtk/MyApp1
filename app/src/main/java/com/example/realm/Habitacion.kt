@@ -5,7 +5,7 @@ import io.realm.kotlin.types.RealmObject
 
 class Habitacion: RealmObject {
     @PrimaryKey
-    var idh: Int = 0
+    var idh: String = ""
 
     var typo: String = ""
     var estatus: String = ""

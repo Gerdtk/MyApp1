@@ -5,7 +5,7 @@ import io.realm.kotlin.types.RealmObject
 
 class Maleta: RealmObject {
     @PrimaryKey
-    var Idm: Int = 0
+    var Idm: String = ""
 
     var peso: String = ""
     var typo: String = ""
