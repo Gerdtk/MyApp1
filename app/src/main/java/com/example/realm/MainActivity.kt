@@ -19,6 +19,7 @@ import android.content.*
 
 class MainActivity : AppCompatActivity() {
     private lateinit var realm: Realm
+    private lateinit var TiempoReal: TiempoReal
 
     @OptIn(UnstableApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,19 +28,22 @@ class MainActivity : AppCompatActivity() {
         Log.d("REALM", "mensaje de prueba")
 
         val config = RealmConfiguration.Builder(
-            schema = setOf(Usuario::class, Habitacion::class)
+            schema = setOf(Usuario::class,
+                Habitacion::class,
+                Maleta::class,
+                Pago::class,
+                Puesto::class,
+                Viaje::class
+                )
         )
 
             .schemaVersion(2)
-            /*.migration{migration, olVersion, newVersion ->
-                if(olversion == 1L){
-                    val schema = migration.schema
-                    schema["Usuario"]?.addField("ejemplo", String::class.java)
-                }
-            }*/
+
             .build()
 
         realm = Realm.open(config)
+        TiempoReal = TiempoReal(realm)
+        TiempoReal.observarCambios()
 /////////////////////////////////////////////////////////////////////////////////////////////
         //////////====== Usuario =======///////////
         val btnUs = findViewById<Button>(R.id.btnUs)
@@ -79,5 +83,11 @@ class MainActivity : AppCompatActivity() {
         }
 
 
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        TiempoReal.detener()
+        realm.close()
     }
 }

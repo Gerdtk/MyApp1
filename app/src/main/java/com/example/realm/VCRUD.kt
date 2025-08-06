@@ -20,7 +20,7 @@ class VCRUD (private val realm: Realm) {
 
         fun eliminar(id: String) {
             realm.writeBlocking {
-                val viaje = query<Viaje>("id == $0", id).first().find()
+                val viaje = query<Viaje>("idv == $0", id).first().find()
                 viaje?.let {
                     delete(it)
                 } ?: Log.e("REALM", "Viaje con ID $id no encontrado")
@@ -29,13 +29,13 @@ class VCRUD (private val realm: Realm) {
 
         fun modificar(id: String, nuevotipo: String, nuevafechaOut: String, nuevafechaIn: String, nuevoDestino: String) {
             realm.writeBlocking {
-                val viaje = query<Viaje>("id == $0", id).first().find()
+                val viaje = query<Viaje>("idv == $0", id).first().find()
                 viaje?.apply {
                     this.typo = nuevotipo
                     this.fechaIn = nuevafechaIn
                     this.fechaOut = nuevafechaOut
                     this.destino = nuevoDestino
-                } ?: Log.e("REALM", "No se encontró viaje para modificar con ID: $id")
+                } ?: Log.e("Gato", "No se encontró viaje para modificar con ID: $id")
             }
         }
 

@@ -111,7 +111,7 @@ class MaletaActivity : AppCompatActivity() {
                                 val adapterEli = ArrayAdapter(
                                     this@MaletaActivity,
                                     android.R.layout.simple_spinner_item,
-                                    listaActualizada.map { "(${it.Idm}) ${it.typo}" }  // Mostrar algo legible
+                                    listaActualizada
                                 )
 
                                 adapterEli.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
@@ -161,7 +161,7 @@ class MaletaActivity : AppCompatActivity() {
                                 val adapterMod = ArrayAdapter(
                                     this@MaletaActivity,
                                     android.R.layout.simple_spinner_item,
-                                    listaActualizada.map { "(${it.Idm}) ${it.typo}" }  // Mostrar algo legible
+                                    listaActualizada
                                 )
 
                                 adapterMod.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
@@ -213,6 +213,10 @@ class MaletaActivity : AppCompatActivity() {
                     val crud = MCRUD(realm)
                     crud.insertar(maleta)
                     Toast.makeText(this, "Usuario guadado", Toast.LENGTH_SHORT).show()
+                    Nombre.text.clear()
+                    Edad.text.clear()
+                    Tipo.text.clear()
+                    Viaje.text.clear()
                 }
 
                 /////////////////==== Modificar ====///////////////////
@@ -222,10 +226,11 @@ class MaletaActivity : AppCompatActivity() {
                     val typo = Tipom.text.toString()
                     val viajeId = Viajem.text.toString()
                     val spinnerMod = findViewById<Spinner>(R.id.spinModificar)
-                    val adapterMod = ArrayAdapter(this, android.R.layout.simple_spinner_item, listaUs)
-                    adapterMod.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                    spinnerMod.adapter = adapterMod
                     val maletaSelec = spinnerMod.selectedItem as Maleta
+
+                    if(maletaSelec == null){
+                        return@setOnClickListener
+                    }
                     val idSelec = maletaSelec.Idm
 
 
@@ -239,19 +244,26 @@ class MaletaActivity : AppCompatActivity() {
 
                     crud.modificar(idSelec, nombre, transporte, typo, viajeId)
                     Toast.makeText(this, "Maleta Modificado", Toast.LENGTH_SHORT).show()
+                    Nombrem.text.clear()
+                    Edadm.text.clear()
+                    Tipom.text.clear()
+                    Viajem.text.clear()
 
                 }
 /////////////////==== Eliminar ====///////////////////
                 btnEli.setOnClickListener {
-                    val nombre = Nombrem.text.toString()
+
                     val spinnerEli = findViewById<Spinner>(R.id.spinEliminar)
-                    val adapterEli = ArrayAdapter(this, android.R.layout.simple_spinner_item, listaUs)
-                    adapterEli.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                    spinnerEli.adapter = adapterEli
-                    val usuarioSelec = spinnerMod.selectedItem as Usuario
-                    val idSelec = usuarioSelec.id
+                    val maletaSelect = spinnerEli.selectedItem as Maleta
+
+                    if(maletaSelect == null){
+                        return@setOnClickListener
+                    }
+                    val idSelec = maletaSelect.Idm
+                    val nombre = maletaSelect.noViaje
+
                     if (nombre.isBlank()) {
-                        Toast.makeText(this, "Nombre y edad son requeridos", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, "No. de viaje es requerido", Toast.LENGTH_SHORT).show()
                         return@setOnClickListener
                     }
 

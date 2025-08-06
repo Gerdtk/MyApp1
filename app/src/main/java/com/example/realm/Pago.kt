@@ -10,4 +10,8 @@ class Pago: RealmObject {
     var pagos: String = ""
     var estatus: String = ""
 
+    override fun toString(): String {
+        return "(Id: ${idf}), $estatus"
+    }
+
 }

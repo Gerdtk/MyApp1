@@ -2,6 +2,7 @@ package com.example.realm
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -107,7 +108,7 @@ class ViajeActivity : AppCompatActivity() {
                                 val adapterEli = ArrayAdapter(
                                     this@ViajeActivity,
                                     android.R.layout.simple_spinner_item,
-                                    listaActualizada.map { "(${it.idv}) ${it.destino}" }  // Mostrar algo legible
+                                    listaActualizada  // Mostrar algo legible
                                 )
 
                                 adapterEli.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
@@ -126,8 +127,8 @@ class ViajeActivity : AppCompatActivity() {
                                 val textoCompleto = buildString {
                                     listaUs.forEach { viaje ->
                                         appendLine("Id: ${viaje.idv}")
-                                        appendLine("fechaIn: ${viaje.fechaIn}")
-                                        appendLine("fechaOut: ${viaje.fechaOut}")
+                                        appendLine("MesIn: ${viaje.fechaIn}")
+                                        appendLine("MesOut: ${viaje.fechaOut}")
                                         appendLine("pagos: ${viaje.typo}")
                                         appendLine("estatus: ${viaje.destino}")
                                         appendLine("-------------")
@@ -241,19 +242,26 @@ class ViajeActivity : AppCompatActivity() {
                 //////////////////==== Eliminar ===////////////////////
                 btnEli.setOnClickListener {
                     val destino = Viajem.text.toString()
-                    val spinnerEli = findViewById<Spinner>(R.id.spinEliminar)
-                    val adapterEli = ArrayAdapter(this, android.R.layout.simple_spinner_item, listaUs)
-                    adapterEli.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                    spinnerEli.adapter = adapterEli
-                    val viajeSelec = spinnerMod.selectedItem as Viaje
-                    val idSelec = viajeSelec.idv
-                    if (destino.isBlank()) {
+
+
+                    val viajeSelec = spinnerEli.selectedItem as Viaje
+
+
+                    if (viajeSelec == null) {
+                        Log.d("Gato", "Na' por aqui")
                         Toast.makeText(this, "Destino es requerido", Toast.LENGTH_SHORT).show()
                         return@setOnClickListener
                     }
+                    val idSelec = viajeSelec.idv
 
-                    crud.eliminar(idSelec)
-                    Toast.makeText(this, "Viaje Eliminado", Toast.LENGTH_SHORT).show()
+                    if(idSelec.isBlank()) {
+                        Log.d("Gato", "Id en blanco")
+
+                    }else {
+                        Log.d("Gato", "eliminado")
+                        crud.eliminar(idSelec)
+                        Toast.makeText(this, "Viaje Eliminado", Toast.LENGTH_SHORT).show()
+                    }
 
                 }
             }

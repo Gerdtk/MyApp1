@@ -2,6 +2,7 @@ package com.example.realm
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -108,7 +109,7 @@ class UsuarioActivity : AppCompatActivity() {
                         val adapterEli = ArrayAdapter(
                             this@UsuarioActivity,
                             android.R.layout.simple_spinner_item,
-                            listaActualizada.map { "(${it.id}) ${it.nombre}" }  // Mostrar algo legible
+                            listaActualizada
                         )
 
                         adapterEli.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
@@ -158,7 +159,7 @@ class UsuarioActivity : AppCompatActivity() {
                         val adapterMod = ArrayAdapter(
                             this@UsuarioActivity,
                             android.R.layout.simple_spinner_item,
-                            listaActualizada.map { "(${it.id}) ${it.nombre}" }  // Mostrar algo legible
+                            listaActualizada
                         )
 
                         adapterMod.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
@@ -210,6 +211,12 @@ class UsuarioActivity : AppCompatActivity() {
             val crud = UCRUD(realm)
             crud.insertar(usuario)
             Toast.makeText(this, "Usuario guadado", Toast.LENGTH_SHORT).show()
+            Nombre.text.clear()
+            Edad.text.clear()
+            Tipo.text.clear()
+            Viaje.text.clear()
+
+
         }
 
         /////////////////==== Modificar ====///////////////////
@@ -218,43 +225,68 @@ class UsuarioActivity : AppCompatActivity() {
             val edad = Edadm.text.toString()
             val typo = Tipom.text.toString()
             val viajeId = Viajem.text.toString()
-            val spinnerMod = findViewById<Spinner>(R.id.spinModificar)
-            val adapterMod = ArrayAdapter(this, android.R.layout.simple_spinner_item, listaUs)
-            adapterMod.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            spinnerMod.adapter = adapterMod
-            val usuarioSelec = spinnerMod.selectedItem as Usuario
-            val idSelec = usuarioSelec.id
 
+            val spinnerMod = findViewById<Spinner>(R.id.spinModificar)
+            val usuarioSelec = spinnerMod.selectedItem as Usuario
+            Log.d("Gato", "tamaño: ${listaUs.size}, ")
+            listaUs.forEach { Log.d("Gato", "Usuario. ${it.nombre}, ID: ${it.id}") }
+            Log.d("Gato", "${usuarioSelec.nombre} ")
+
+            if (usuarioSelec == null) {
+                Toast.makeText(this, "No se seleccionó ningún usuario", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+
+            }
+
+            val idSelec = usuarioSelec.id
 
             // Validar que no esté vacío
             if (nombre.isBlank() || edad.isBlank()) {
                 Toast.makeText(this, "Nombre y edad son requeridos", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
-              // Usa el id o el nombre, depende de cómo llenaste el spinner
-            val crud = UCRUD(realm)
 
+            val crud = UCRUD(realm)
             crud.modificar(idSelec, nombre, edad, typo, viajeId)
+
             Toast.makeText(this, "Usuario Modificado", Toast.LENGTH_SHORT).show()
 
+            Nombrem.text.clear()
+            Edadm.text.clear()
+            Tipom.text.clear()
+            Viajem.text.clear()
         }
 
+        /////////////////==== Eliminar ====///////////////////
+
         btnEli.setOnClickListener {
-            val nombre = Nombrem.text.toString()
-            val spinnerEli = findViewById<Spinner>(R.id.spinEliminar)
-            val adapterEli = ArrayAdapter(this, android.R.layout.simple_spinner_item, listaUs)
-            adapterEli.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            spinnerEli.adapter = adapterEli
-            val usuarioSelec = spinnerMod.selectedItem as Usuario
-            val idSelec = usuarioSelec.id
-            if (nombre.isBlank()) {
-                Toast.makeText(this, "Nombre y edad son requeridos", Toast.LENGTH_SHORT).show()
+
+
+
+            Log.d("Gato", "tamaño: ${listaUs.size}, ")
+            listaUs.forEach { Log.d("Gato", "Usuario. ${it.nombre}, ID: ${it.id}") }
+            val usuarioSelec = spinnerEli.selectedItem as Usuario
+
+
+            if (usuarioSelec == null) {
+                Log.d("Gato", "na' por aqui")
+                Toast.makeText(this, "no se encuetra al usuario", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
+
             }
+            val idSelec = usuarioSelec.id
+            val nombreU = usuarioSelec.nombre
 
-            crud.eliminar(idSelec)
-            Toast.makeText(this, "Usuario Eliminado", Toast.LENGTH_SHORT).show()
+            if (idSelec.isBlank()) {
+                Log.d("Gato", "Id en blanco")
+            } else if (nombreU.isBlank()) {
+                Log.d("Gato", " El Id: ${usuarioSelec.id}, 'Ta en blanco el nombre ")
+            } else {
+                Log.d("Gato", "este es el que vamo' a eliminar ID: ${usuarioSelec.id}, NOmbre: ${usuarioSelec.nombre}")
+                crud.eliminar(idSelec)
+                Toast.makeText(this, "Usuario eliminado", Toast.LENGTH_SHORT).show()
 
+            }
         }
     }
 

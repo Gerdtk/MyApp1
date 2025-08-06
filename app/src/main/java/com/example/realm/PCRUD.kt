@@ -19,7 +19,7 @@ class PCRUD(private val realm: Realm) {
 
         fun eliminar(id: String) {
             realm.writeBlocking {
-                val puesto = query<Puesto>("id == $0", id).first().find()
+                val puesto = query<Puesto>("idp == $0", id).first().find()
                 puesto?.let {
                     delete(it)
                 } ?: Log.e("REALM", "Puesto con ID $id no encontrado")
@@ -28,7 +28,7 @@ class PCRUD(private val realm: Realm) {
 
         fun modificar(id: String, nuevoNombre: String, nuevotypo: String, nuevaEdad: String, nuevoViajeId: String) {
             realm.writeBlocking {
-                val puesto = query<Puesto>("id == $0", id).first().find()
+                val puesto = query<Puesto>("idp == $0", id).first().find()
                 puesto?.apply {
                     this.asiento = nuevoNombre
                     this.transpote = nuevaEdad

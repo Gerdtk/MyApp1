@@ -108,7 +108,7 @@ class PagoActivity : AppCompatActivity() {
                                 val adapterEli = ArrayAdapter(
                                     this@PagoActivity,
                                     android.R.layout.simple_spinner_item,
-                                    listaActualizada.map { "(${it.idf}) ${it.estatus}" }  // Mostrar algo legible
+                                    listaActualizada
                                 )
 
                                 adapterEli.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
@@ -127,8 +127,8 @@ class PagoActivity : AppCompatActivity() {
                                 val textoCompleto = buildString {
                                     listaUs.forEach { pago ->
                                         appendLine("Id: ${pago.idf}")
-                                        appendLine("Fecha In: ${pago.fechaIn}")
-                                        appendLine("Fecha Out: ${pago.fechaOut}")
+                                        appendLine("Mes In: ${pago.fechaIn}")
+                                        appendLine("Mes Out: ${pago.fechaOut}")
                                         appendLine("Pagos: ${pago.pagos}")
                                         appendLine("Estatus: ${pago.estatus}")
                                         appendLine("-------------")
@@ -158,7 +158,7 @@ class PagoActivity : AppCompatActivity() {
                                 val adapterMod = ArrayAdapter(
                                     this@PagoActivity,
                                     android.R.layout.simple_spinner_item,
-                                    listaActualizada.map { "(${it.idf}) ${it.estatus}" }  // Mostrar algo legible
+                                    listaActualizada
                                 )
 
                                 adapterMod.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
@@ -210,51 +210,67 @@ class PagoActivity : AppCompatActivity() {
                     val crud = FCRUD(realm)
                     crud.insertar(pago)
                     Toast.makeText(this, "Pago guadado", Toast.LENGTH_SHORT).show()
+
+                    Nombre.text.clear()
+                    Edad.text.clear()
+                    Tipo.text.clear()
+                    Viaje.text.clear()
                 }
 
                 /////////////////==== Modificar ====///////////////////
                 btnGuM.setOnClickListener { //Modificar
-                    val nombre = Nombrem.text.toString()
-                    val edad = Edadm.text.toString()
+                    val MesIn = Nombrem.text.toString()
+                    val MesOut = Edadm.text.toString()
                     val typo = Tipom.text.toString()
                     val viajeId = Viajem.text.toString()
                     val spinnerMod = findViewById<Spinner>(R.id.spinModificar)
-                    val adapterMod = ArrayAdapter(this, android.R.layout.simple_spinner_item, listaUs)
-                    adapterMod.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                    spinnerMod.adapter = adapterMod
+
                     val pagoSelec = spinnerMod.selectedItem as Pago
+
+                    if(pagoSelec == null){
+                        return@setOnClickListener
+                    }
                     val idSelec = pagoSelec.idf
 
-
                     // Validar que no esté vacío
-                    if (nombre.isBlank() || edad.isBlank()) {
+                    if (typo.isBlank() || viajeId.isBlank()) {
                         Toast.makeText(this, "Pago y estatus son requeridos", Toast.LENGTH_SHORT).show()
                         return@setOnClickListener
                     }
                     // Usa el id o el nombre, depende de cómo llenaste el spinner
                     val crud = FCRUD(realm)
+                    crud.modificar(idSelec, MesIn, MesOut, typo, viajeId)
 
-                    crud.modificar(idSelec, nombre, edad, typo, viajeId)
+                    Nombrem.text.clear()
+                    Edadm.text.clear()
+                    Tipom.text.clear()
+                    Viajem.text.clear()
                     Toast.makeText(this, "Usuario Modificado", Toast.LENGTH_SHORT).show()
 
                 }
 
+
+        /////////////////==== Eliminar ====///////////////////
+
                 btnEli.setOnClickListener {
-                    val nombre = Nombrem.text.toString()
+
                     val spinnerEli = findViewById<Spinner>(R.id.spinEliminar)
-                    val adapterEli = ArrayAdapter(this, android.R.layout.simple_spinner_item, listaUs)
-                    adapterEli.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                    spinnerEli.adapter = adapterEli
-                    val usuarioSelec = spinnerMod.selectedItem as Usuario
-                    val idSelec = usuarioSelec.id
+
+                    val pagoSelec = spinnerEli.selectedItem as Pago
+
+                    if(pagoSelec == null){
+                        return@setOnClickListener
+                    }
+                    val idSelec = pagoSelec.idf
+                    val nombre = pagoSelec.estatus
+
                     if (nombre.isBlank()) {
                         Toast.makeText(this, "Pago y estatus son requeridos", Toast.LENGTH_SHORT).show()
                         return@setOnClickListener
+                    } else {
+                        crud.eliminar(idSelec)
+                        Toast.makeText(this, "Usuario Eliminado", Toast.LENGTH_SHORT).show()
                     }
-
-                    crud.eliminar(idSelec)
-                    Toast.makeText(this, "Usuario Eliminado", Toast.LENGTH_SHORT).show()
-
                 }
             }
 

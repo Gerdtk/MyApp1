@@ -19,7 +19,7 @@ class MCRUD(private val realm: Realm) {
 
         fun eliminar(id: String) {
             realm.writeBlocking {
-                val maleta= query<Maleta>("id == $0", id).first().find()
+                val maleta= query<Maleta>("Idm == $0", id).first().find()
                 maleta?.let {
                     delete(it)
                 } ?: Log.e("REALM", "Maleta con ID $id no encontrada")
@@ -28,7 +28,7 @@ class MCRUD(private val realm: Realm) {
 
         fun modificar(id: String, nuevoPeso: String, nuevotypo: String, nuevaTransporte: String, nuevoNoViaje: String) {
             realm.writeBlocking {
-                val maleta = query<Maleta>("id == $0", id).first().find()
+                val maleta = query<Maleta>("Idm == $0", id).first().find()
                 maleta?.apply {
                     this.peso = nuevoPeso
                     this.typo = nuevotypo

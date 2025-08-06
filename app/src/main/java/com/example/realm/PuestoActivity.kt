@@ -2,6 +2,7 @@ package com.example.realm
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -112,8 +113,9 @@ class PuestoActivity : AppCompatActivity() {
                                 val adapterEli = ArrayAdapter(
                                     this@PuestoActivity,
                                     android.R.layout.simple_spinner_item,
-                                    listaActualizada.map { "(${it.idp}) ${it.estatus}" }  // Mostrar algo legible
+                                    listaActualizada
                                 )
+
 
                                 adapterEli.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
                                 spinnerEli.adapter = adapterEli
@@ -131,10 +133,10 @@ class PuestoActivity : AppCompatActivity() {
                                 val textoCompleto = buildString {
                                     listaUs.forEach { puesto ->
                                         appendLine("Id: ${puesto.idp}")
-                                        appendLine("Nombre: ${puesto.asiento}")
-                                        appendLine("Edad: ${puesto.transpote}")
-                                        appendLine("Tipo: ${puesto.uso}")
-                                        appendLine("Viaje: ${puesto.estatus}")
+                                        appendLine("Asiento: ${puesto.asiento}")
+                                        appendLine("Transporte: ${puesto.transpote}")
+                                        appendLine("Uso: ${puesto.uso}")
+                                        appendLine("Estatus: ${puesto.estatus}")
                                         appendLine("-------------")
                                     }
 
@@ -162,7 +164,7 @@ class PuestoActivity : AppCompatActivity() {
                                 val adapterMod = ArrayAdapter(
                                     this@PuestoActivity,
                                     android.R.layout.simple_spinner_item,
-                                    listaActualizada.map { "(${it.idp}) ${it.estatus}" }  // Mostrar algo legible
+                                    listaActualizada
                                 )
 
                                 adapterMod.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
@@ -211,8 +213,17 @@ class PuestoActivity : AppCompatActivity() {
                         this.uso = typo
                         this.estatus = viajeId
                     }
+
                     val crud = PCRUD(realm)
                     crud.insertar(puesto)
+
+
+                    Nombre.text.clear()
+                    Edad.text.clear()
+                    Tipo.text.clear()
+                    Viaje.text.clear()
+
+
                     Toast.makeText(this, "Puesto guardado", Toast.LENGTH_SHORT).show()
                 }
 
@@ -223,41 +234,53 @@ class PuestoActivity : AppCompatActivity() {
                     val typo = Tipom.text.toString()
                     val viajeId = Viajem.text.toString()
                     val spinnerMod = findViewById<Spinner>(R.id.spinModificar)
-                    val adapterMod = ArrayAdapter(this, android.R.layout.simple_spinner_item, listaUs)
-                    adapterMod.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                    spinnerMod.adapter = adapterMod
+
                     val puestoSelec = spinnerMod.selectedItem as Puesto
+
+                    if(puestoSelec == null){
+                        Toast.makeText(this, "No se selecciono na' ", Toast.LENGTH_SHORT).show()
+                        return@setOnClickListener
+                    }
                     val idSelec = puestoSelec.idp
 
 
                     // Validar que no esté vacío
                     if (nombre.isBlank() || edad.isBlank()) {
-                        Toast.makeText(this, "Nombre y edad son requeridos", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, "Asiento y transporte son requeridos", Toast.LENGTH_SHORT).show()
                         return@setOnClickListener
                     }
                     // Usa el id o el nombre, depende de cómo llenaste el spinner
                     val crud = PCRUD(realm)
-
                     crud.modificar(idSelec, nombre, edad, typo, viajeId)
+
+                    Nombrem.text.clear()
+                    Edadm.text.clear()
+                    Tipom.text.clear()
+                    Viajem.text.clear()
+
                     Toast.makeText(this, "Puesto Modificado", Toast.LENGTH_SHORT).show()
 
                 }
-
+//////////////////////==== Eliminar ====///////////////////
                 btnEli.setOnClickListener {
                     val nombre = Nombrem.text.toString()
-                    val spinnerEli = findViewById<Spinner>(R.id.spinEliminar)
-                    val adapterEli = ArrayAdapter(this, android.R.layout.simple_spinner_item, listaUs)
-                    adapterEli.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                    spinnerEli.adapter = adapterEli
-                    val usuarioSelec = spinnerMod.selectedItem as Puesto
-                    val idSelec = usuarioSelec.idp
-                    if (nombre.isBlank()) {
+
+                    val usuarioSelec = spinnerEli.selectedItem as Puesto
+
+
+                    if (usuarioSelec == null) {
                         Toast.makeText(this, "Nombre y edad son requeridos", Toast.LENGTH_SHORT).show()
                         return@setOnClickListener
                     }
+                    val idSelec = usuarioSelec.idp
+                    val asientoP = usuarioSelec.asiento
 
-                    crud.eliminar(idSelec)
-                    Toast.makeText(this, "Puesto Eliminado", Toast.LENGTH_SHORT).show()
+                    if (idSelec.isBlank()){
+                        Log.d("Gato", "Id en blanco")
+                    }
+
+                    else {crud.eliminar(idSelec)
+                    Toast.makeText(this, "Puesto Eliminado", Toast.LENGTH_SHORT).show()}
 
                 }
             }

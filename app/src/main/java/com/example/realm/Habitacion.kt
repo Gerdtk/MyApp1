@@ -11,4 +11,8 @@ class Habitacion: RealmObject {
     var estatus: String = ""
     var checkIn: String = ""
     var checkOut: String = ""
+
+    override fun toString(): String{
+        return "(ID: ${idh}), NO: $checkIn"
+    }
 }

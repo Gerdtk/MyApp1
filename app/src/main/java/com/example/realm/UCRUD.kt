@@ -19,10 +19,11 @@ class UCRUD(private val realm: Realm) {
 
     fun eliminar(id: String) {
         realm.writeBlocking {
+
             val usuario = query<Usuario>("id == $0", id).first().find()
             usuario?.let {
                 delete(it)
-            } ?: Log.e("REALM", "Usuario con ID $id no encontrado")
+            } ?: Log.e("Gato", "Usuario con ID $id no encontrado")
         }
     }
 

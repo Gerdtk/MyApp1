@@ -111,7 +111,7 @@ class HabitacionActivity : AppCompatActivity() {
                                 val adapterEli = ArrayAdapter(
                                     this@HabitacionActivity,
                                     android.R.layout.simple_spinner_item,
-                                    listaActualizada.map { "(${it.idh}) ${it.estatus}" }  // Mostrar algo legible
+                                    listaActualizada
                                 )
 
                                 adapterEli.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
@@ -161,7 +161,7 @@ class HabitacionActivity : AppCompatActivity() {
                                 val adapterMod = ArrayAdapter(
                                     this@HabitacionActivity,
                                     android.R.layout.simple_spinner_item,
-                                    listaActualizada.map { "(${it.idh}) ${it.estatus}" }  // Mostrar algo legible
+                                    listaActualizada
                                 )
 
                                 adapterMod.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
@@ -213,6 +213,10 @@ class HabitacionActivity : AppCompatActivity() {
                     val crud = HCRUD(realm)
                     crud.insertar(habitacion)
                     Toast.makeText(this, "Usuario guadado", Toast.LENGTH_SHORT).show()
+                    Nombre.text.clear()
+                    Edad.text.clear()
+                    Tipo.text.clear()
+                    Estatus.text.clear()
                 }
 
                 /////////////////==== Modificar ====///////////////////
@@ -222,10 +226,11 @@ class HabitacionActivity : AppCompatActivity() {
                     val typo = Tipom.text.toString()
                     val estatus = Viajem.text.toString()
                     val spinnerMod = findViewById<Spinner>(R.id.spinModificar)
-                    val adapterMod = ArrayAdapter(this, android.R.layout.simple_spinner_item, listaUs)
-                    adapterMod.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                    spinnerMod.adapter = adapterMod
                     val usuarioSelec = spinnerMod.selectedItem as Habitacion
+
+                    if(usuarioSelec == null){
+                        return@setOnClickListener
+                    }
                     val idSelec = usuarioSelec.idh
 
 
@@ -239,25 +244,28 @@ class HabitacionActivity : AppCompatActivity() {
 
                     crud.modificar(idSelec, nombre, edad, typo, estatus)
                     Toast.makeText(this, "Habitacion Modificada", Toast.LENGTH_SHORT).show()
-
+                    Nombrem.text.clear()
+                    Edadm.text.clear()
+                    Tipom.text.clear()
+                    Viajem.text.clear()
                 }
                 //////////////////////////==== Eliminar ==== //////////////////////////
                 btnEli.setOnClickListener {
-                    val typo = Nombrem.text.toString()
+
                     val spinnerEli = findViewById<Spinner>(R.id.spinEliminar)
-                    val adapterEli = ArrayAdapter(this, android.R.layout.simple_spinner_item, listaUs)
-                    adapterEli.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                    spinnerEli.adapter = adapterEli
-                    val usuarioSelec = spinnerMod.selectedItem as Habitacion
+                    val usuarioSelec = spinnerEli.selectedItem as Habitacion
+
+                    if(usuarioSelec == null){
+                        return@setOnClickListener
+                    }
                     val idSelec = usuarioSelec.idh
+                    val typo = usuarioSelec.typo
+
                     if (typo.isBlank()) {
                         Toast.makeText(this, "Tipo y estatus son requeridos", Toast.LENGTH_SHORT).show()
                         return@setOnClickListener
-                    }
-
-                    crud.eliminar(idSelec)
-                    Toast.makeText(this, "Habitacion Eliminada", Toast.LENGTH_SHORT).show()
-
+                    }else{crud.eliminar(idSelec)
+                    Toast.makeText(this, "Habitacion Eliminada", Toast.LENGTH_SHORT).show()}
                 }
             }
 }

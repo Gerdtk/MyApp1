@@ -19,7 +19,7 @@ class HCRUD(private val realm: Realm) {
 
         fun eliminar(id: String) {
             realm.writeBlocking {
-                val habitacion = query<Habitacion>("id == $0", id).first().find()
+                val habitacion = query<Habitacion>("idh == $0", id).first().find()
                 habitacion?.let {
                     delete(it)
                 } ?: Log.e("REALM", "Habitacion con ID $id no encontrado")
@@ -28,7 +28,7 @@ class HCRUD(private val realm: Realm) {
 
         fun modificar(id: String, nuevotypo: String, nuevoestatus: String,  nuevoCheckIn: String, nuevoCheckOut: String) {
             realm.writeBlocking {
-                val habitacion = query<Habitacion>("id == $0", id).first().find()
+                val habitacion = query<Habitacion>("idh == $0", id).first().find()
                 habitacion?.apply {
                     this.typo = nuevotypo
                     this.estatus = nuevoestatus

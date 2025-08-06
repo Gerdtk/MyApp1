@@ -12,6 +12,6 @@ class Usuario: RealmObject{
     var viajeId: String = ""
 
     override fun toString(): String{
-        return "(${id} ${nombre}"
+        return "(${id}),  $nombre"
     }
 }

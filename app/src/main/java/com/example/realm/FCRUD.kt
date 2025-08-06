@@ -23,7 +23,7 @@ class FCRUD(private val realm: Realm) {
 
         fun eliminar(id: String) {
             realm.writeBlocking {
-                val pago= query<Pago>("id == $0", id).first().find()
+                val pago= query<Pago>("idf == $0", id).first().find()
                 pago?.let {
                     delete(it)
                 } ?: Log.e("REALM", "Pago con ID $id no encontrado")
@@ -32,7 +32,7 @@ class FCRUD(private val realm: Realm) {
     ///////////////////////////
     fun modificar(id: String, nuevafechaIn: String, nuevafechaOut: String, nuevopago: String, nuevoestatus: String) {
             realm.writeBlocking {
-                val pago = query<Pago>("id == $0", id).first().find()
+                val pago = query<Pago>("idf == $0", id).first().find()
                 pago?.apply {
                     this.fechaIn = nuevafechaIn
                     this.fechaOut = nuevafechaOut
